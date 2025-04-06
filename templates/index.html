@@ -475,12 +475,12 @@
     </div>
 
     <!-- Consent Modal -->
-    <div class="modal fade consent-modal" id="consentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade consent-modal" id="consentModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Data Usage Consent</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            <!-- <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button> -->
           </div>
           <div class="modal-body">
             <p>By using this application, you consent to:</p>
@@ -491,7 +491,7 @@
             </ul>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Decline</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="rejectConsent()">Decline</button>
             <button type="button" class="btn btn-primary" onclick="acceptConsent()">Accept</button>
           </div>
         </div>
@@ -559,6 +559,11 @@
         }).then(() => {
           consentModal.hide();
         });
+      }
+
+      function rejectConsent() {
+        // Redirect to logout route
+        window.location.href = '/logout';
       }
       
       async function importMessages(channelId) {
@@ -633,16 +638,6 @@
           importBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Importing...';
         }
         
-        // Check if consent has been given
-        if (!sessionStorage.getItem('consent_given')) {
-          showConsentModal(() => {
-            // After consent is given, proceed with import
-            performImport(channelId, importBtn);
-          });
-          return;
-        }
-        
-        // If consent already given, proceed with import
         performImport(channelId, importBtn);
       }
       
